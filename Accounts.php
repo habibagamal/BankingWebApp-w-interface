@@ -108,7 +108,7 @@
                 echo $currency['currency_name'];
            ?>
         </td>
-        <td><?php echo $account['accountType'] ?></td>
+        <td><?php if($account['accountType']=='1'){ echo "Savings"; }else {echo "Current";} ?></td>
         <td> <button name="submit" type="submit" class="btn btn-danger" >
           <?php 
             if ($userType == '00')
