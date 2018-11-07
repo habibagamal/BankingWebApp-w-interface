@@ -1,16 +1,19 @@
 <?php
   require ('db.php');
-
+session_start();
 echo ini_get('display_errors');
 
 if (!ini_get('display_errors')) {
     ini_set('display_errors', '1');
 }
 
+$userType = $_SESSION['userType'];
+echo $userType;
+
 if ($conn)
   echo "connected"; 
 
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
 
   if (isset($_POST['submit'])) 
   {
@@ -25,28 +28,61 @@ echo ini_get('display_errors');
       $type = mysqli_real_escape_string($conn, $_POST['type']);
       $password_status = 0;
       $account_status  = 0;
-      header("location: Home.php");
+
+      $query = "SELECT username, userType, user_password FROM OnlineAccount WHERE username = '".$username."'";
+      $result_query = mysqli_query($conn, $query);
+      $user = mysqli_fetch_assoc($result_query);
+
+      // if ($userType == '10')
+      //   header("location: Administrator.php");
+      // else
+      //   header("location: Home.php");
+
       $hashed = password_hash ($password, PASSWORD_DEFAULT, ['COST => 10']);
 
-      if ($type == '00')
+      
+      if ($user['username'] == $username)
+      {
+        $check = password_verify($password, $user['user_password']);
+
+        if ($check)
+        {
+          if ($user['userType'] == '01' && $type == '00') 
+          {
+              $accountNUMINT = (int) $accountNUM;
+              $clientIDINT  = (int) $clientID;
+
+            $sql = "UPDATE OnlineAccount SET clientID = '".$clientIDINT."', nationalID = '".$nationalID."', Fname = '".$Fname."', Lname = '".$Lname."' , AccountNum = '".$accountNUMINT."',userType = '11', account_status = '1' WHERE username = '".$username."'";
+          }
+          else if ($user['userType'] == '00' && $type == '01')
+          {
+            $sql = "UPDATE OnlineAccount SET userType = '11' WHERE username = '".$username."'";
+          }
+        }
+      }
+      else if ($type == '00' && $userType != '10')
       {
         $accountNUMINT = (int) $accountNUM;
         $clientIDINT  = (int) $clientID;
         $sql = "INSERT INTO OnlineAccount (username, user_password, account_status, password_status, clientID, nationalID, Fname, Lname, AccountNum, userType) VALUES ('$username', '$hashed', '1', '$password_status', $clientIDINT, '$nationalID', '$Fname', '$Lname', $accountNUMINT, '$type')";
+        echo "2";
       }
       else if ($type == '01')
       {
         $sql = "INSERT INTO OnlineAccount (username, user_password, account_status, password_status, Fname, Lname, userType) VALUES ('$username', '$hashed', '$account_status', '$password_status', '$Fname', '$Lname', '$type')";
+        echo "3";
       }
       else if ($type == '10')
       {
         $sql = "INSERT INTO OnlineAccount (username, user_password, account_status, password_status, Fname, Lname, userType) VALUES ('$username', '$hashed', '$account_status', '$password_status', '$Fname', '$Lname', '$type')";
+        echo "4";
       }
       else if ($type == '11')
       {
         $accountNUMINT = (int) $accountNUM;
         $clientIDINT  = (int) $clientID;
         $sql = "INSERT INTO OnlineAccount (username, user_password, account_status, password_status, clientID, nationalID, Fname, Lname, AccountNum, userType) VALUES ('$username', '$hashed', '1', '$password_status', $clientIDINT, '$nationalID', '$Fname', '$Lname', $accountNUMINT, '$type')";
+        echo "5";
       }
       
       if(mysqli_query($conn, $sql))

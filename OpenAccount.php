@@ -75,7 +75,7 @@ echo ini_get('display_errors');
       </nav>
     <div class="collapse" id="navbarToggleExternalContent">
         <div class="bg-dark p-4">
-        <button type="button" class="btn btn-success" ><a href="home.html" style="color:white">HOME</button></a>
+        <button type="button" class="btn btn-success" ><a href="home.php" style="color:white">HOME</button></a>
         <button type="button" class="btn btn-warning" ><a href="home.php" style="color:white">LOGOUT</button></a>
         </div>
     </div>

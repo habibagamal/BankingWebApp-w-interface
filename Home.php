@@ -1,3 +1,21 @@
+<?php
+  require ('db.php');
+session_start();
+echo ini_get('display_errors');
+
+if (!ini_get('display_errors')) {
+    ini_set('display_errors', '1');
+}
+
+$_SESSION['userType'] = '00';
+$userType = $_SESSION['userType'];
+echo $userType;
+
+if ($conn)
+  echo "connected"; 
+
+echo ini_get('display_errors');
+?>
 
 <!doctype html>
 <html lang="en">
