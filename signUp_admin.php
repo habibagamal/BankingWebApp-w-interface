@@ -1,87 +1,71 @@
 <?php
-require ('db.php');
-
+  require ('db.php');
+session_start();
 echo ini_get('display_errors');
 
 if (!ini_get('display_errors')) {
     ini_set('display_errors', '1');
 }
 
+// $userType = $_SESSION['userType'];
+// echo $userType;
+
 if ($conn)
   echo "connected"; 
 
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
 
   if (isset($_POST['submit'])) 
   {
       session_start();
-
-      $currUser = $_SESSION ['username'];
-      $userType = $_SESSION ['userType'];
       $username = mysqli_real_escape_string($conn, $_POST['username']);
-      $password1 = mysqli_real_escape_string($conn, $_POST['password1']);
-      $password2 = mysqli_real_escape_string($conn, $_POST['password2']);
+      $Fname = mysqli_real_escape_string($conn, $_POST['Fname']);
+      $Lname = mysqli_real_escape_string($conn, $_POST['Lname']);
+      $password = mysqli_real_escape_string($conn, $_POST['password']);
+      $nationalID = mysqli_real_escape_string($conn, $_POST['nationalID']);
+      $clientID = mysqli_real_escape_string($conn, $_POST['clientID']);
+      $accountNUM = mysqli_real_escape_string($conn, $_POST['accountNUM']);
+      $type = mysqli_real_escape_string($conn, $_POST['type']);
+      $password_status = 0;
+      $account_status  = 0;
 
-      echo $currUser;
+      $query = "SELECT username, userType, user_password FROM OnlineAccount WHERE username = '".$username."'";
+      $result_query = mysqli_query($conn, $query);
+      $user = mysqli_fetch_assoc($result_query);
 
-      if ($password1 == $password2)
+      header("location: Administrator.php");
+
+      $hashed = password_hash ($password, PASSWORD_DEFAULT, ['COST => 10']);
+      if ($user['userType'] == '00' && $type == '01')
       {
 
-        $hashed = password_hash ($password1, PASSWORD_DEFAULT, ['COST => 10']);
-        echo $hashed;
+        $check = password_verify($password, $user['user_password']);
 
-        if ($currUser == $username)
-        {
-          if ($userType == '00')
-          {
-            header("location:client.php");
-            echo "password changed";
-          }
-          if ($userType == '01')
-          {
-            header("location:teller.php");
-            echo "password changed";
-          }
-          if ($userType == '10')
-          {
-            header("location:administrator.php");
-            echo "password changed";
-          }
-          if ($userType == '11')
-          {
-            header("location:Teller_Client1.php");
-            echo "password changed";
-          }
-          $sql = "UPDATE OnlineAccount SET user_password ='".$hashed."', password_status = '0' WHERE username = '".$username."'";
-          if(mysqli_query($conn, $sql))
-          {
-            echo "password changed";
-          } 
-          else
-          {
-            echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
-          }
-        }
-        else
-        if ($userType == '10')
-        {
-            header("location:Administrator.php");
-            $sql = "UPDATE OnlineAccount SET user_password ='".$hashed."', password_status = '1' WHERE username = '".$username."' AND userType != '00'";
-            if(mysqli_query($conn, $sql))
-            {
-              echo "password changed";
-            } 
-            else
-            {
-              echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
-            }
-        }
-        
+        if ($check)
+          $sql = "UPDATE OnlineAccount SET userType = '11' WHERE username = '".$username."'";
       }
- 
+      else
+      if ($type == '01')
+      {
+        $sql = "INSERT INTO OnlineAccount (username, user_password, account_status, password_status, Fname, Lname, userType) VALUES ('$username', '$hashed', '$account_status', '$password_status', '$Fname', '$Lname', '$type')";
+        echo "3";
+      }
+      else if ($type == '10')
+      {
+        $sql = "INSERT INTO OnlineAccount (username, user_password, account_status, password_status, Fname, Lname, userType) VALUES ('$username', '$hashed', '$account_status', '$password_status', '$Fname', '$Lname', '$type')";
+        echo "4";
+      }
+      
+      if(mysqli_query($conn, $sql))
+      {
+        echo "Records inserted successfully.";
+      } 
+      else
+      {
+        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+      }
   }
 ?>
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -106,11 +90,11 @@ echo ini_get('display_errors');
   </head>
   <body>
     <!-- NAVIGATION -->
-   <div class="pos-f-t">
+  <div class="pos-f-t">
       <nav class="navbar navbar-dark bg-dark">
         <div class="container-fluid">
             <a class = "navbar-brand" href ="#"><img src = "logo.jpg" width="70" height = "70"></a>
-
+            
             <button class="btn btn-secondary" onclick="goBack()">Go Back</button>
             <script>
               function goBack() 
@@ -118,7 +102,7 @@ echo ini_get('display_errors');
               window.history.back();
               }
             </script>
-            
+
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
@@ -127,31 +111,30 @@ echo ini_get('display_errors');
     <div class="collapse" id="navbarToggleExternalContent">
         <div class="bg-dark p-4">
         <button type="button" class="btn btn-success" ><a href="home.php" style="color:white">HOME</button></a>
-        <button type="button" class="btn btn-warning" ><a href="home.php" style="color:white">LOGOUT</button></a>
+        <<button type="button" class="btn btn-warning" ><a href="home.php" style="color:white">LOGOUT</button></a>
         </div>
     </div>
   </div>
 
     <!--Form-->
     <br>
-    <br>
-    <br>
   <div class="container d-flex justify-content-center align-items-center">
-    <div class ="card align-items-center text-center" style="width:20rem;background-color:rgb(0, 0, 0);opacity:0.7;">
-      <form method ="POST" action = "#">
+    <div class ="card align-items-center text-center" style="width:20rem; background-color:rgb(0, 0, 0);opacity:0.7;">
+      <form method = "POST" action="#">
         <div class="form-group" style="color:white">
           <label for="exampleInputEmail1">Username</label>
-          <input name="username" type="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username ">
+          <input name="username" type="username" class="form-control" id="exampleInputUsername1" placeholder="Enter username">
         </div>
-        <br>
         <div class="form-group" style="color:white">
-          <label for="exampleInputPassword1">New Password</label>
-          <input name="password1" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+          <label for="exampleInputPassword1">Password</label>
+          <input name = "password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
         </div>
-        <br>
-        <div class="form-group" style="color:white">
-          <label for="exampleInputPassword1">Confirm New Password</label>
-          <input name ="password2" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">Type</label>
+          <select name="type" class="form-control" id="exampleFormControlSelect1">
+              <option value = "01">Teller</option>
+              <option value = "10">Administrator</option>
+          </select>
         </div>
         <button name="submit" type="submit" class="btn btn-primary">Submit Change</button>
       </form>

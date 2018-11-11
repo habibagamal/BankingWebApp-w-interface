@@ -91,7 +91,7 @@
           <span class="sr-only">Toggle Dropdown</span>
         </button>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="SignUp.php">Create Account</a>
+          <a class="dropdown-item" href="signUp_admin.php">Create Account</a>
           <a class="dropdown-item" href="DeleteAccount.php">Delete Account</a>
           <a class="dropdown-item" href="ChangePassword.php">Change Password</a>
           </div>

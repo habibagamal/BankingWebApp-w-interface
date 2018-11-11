@@ -86,6 +86,7 @@
       <th scope="col">Teller</th>
       <th scope="col">Type</th>
       <th scope="col">Recepient</th>
+      <th scope="col">Sender</th>
     </tr>
   </thead>
   <tbody>
@@ -101,6 +102,7 @@
         <td><?php echo $transaction['teller']; ?></td>
         <td><?php echo $transaction['transaction_type']; ?></td>
         <td><?php echo $transaction['transfer_recepient']; ?></td>
+        <td><?php echo $transaction['transfer_sender']; ?> </td>
       </tr>
     <?php
     }

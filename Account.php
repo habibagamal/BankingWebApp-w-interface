@@ -45,52 +45,89 @@ echo $userType;
   if (isset($_POST['transfer'])) 
   {
 
-    //header ("location:Transactions.php");
+    header ("location:Transactions.php");
     $tAmount = mysqli_real_escape_string($conn, $_POST['tAmount']);
     $tAccount = mysqli_real_escape_string($conn, $_POST['tAccount']);
 
     $accountNumINT = (int) $accountNum;
-    if ($account['balance'] >= $tAmount)
-    {
-      if ($userType == '01' || $userType == '11')
-        $sql = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, teller, transaction_type, transfer_recepient) VALUES ($accountNumINT, $tAmount, CURDATE(),CURTIME(), '$tellerUsername', 'transfer', $tAccount)"; 
-      else 
-        $sql = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, transaction_type, transfer_recepient) VALUES ($accountNumINT, $tAmount, CURDATE(),CURTIME(), 'transfer', $tAccount)"; 
-      if(mysqli_query($conn, $sql))
-      {
-        echo "transaction added";
-        //require_once ('sms.php');
-      } 
-      else
-      {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
-      } 
 
-      $sql2 = "UPDATE bankAccount SET balance = balance - '".$tAmount."' WHERE accountNum = '".$accountNumINT."'"; 
+    if ($tAccount != $accountNumINT)
+    { 
+      $recepient =  "SELECT * from bankAccount WHERE accountNum = '".$tAccount."'";
+      $rRecep =  mysqli_query($conn, $recepient);
+      $recepR = mysqli_fetch_assoc($rRecep);
 
-      if(mysqli_query($conn, $sql2))
-      {
-        echo "balance decreased";
-      } 
-      else
-      {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
-      } 
 
-      $sql3 = "UPDATE bankAccount SET balance = balance + '".$tAmount."' WHERE accountNum = '".$tAccount."'"; 
+      $farah = "SELECT * FROM currencyExchange WHERE currency_codeA = '".$account['currency_code']."' AND currency_codeB = '".$recepR['currency_code']."'";
+      $rFarah = mysqli_query($conn, $farah);
+      $rate = mysqli_fetch_assoc($rFarah);
 
-      if(mysqli_query($conn, $sql3))
-      {
-        echo "balance increased";
-      } 
-      else
-      {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
-      } 
+    //   echo $rate; 
 
+      $amount_rate = $tAmount * $rate['rate'];
+         
+      if ($account['balance'] >= $tAmount)
+      {
+
+
+        if ($userType == '01' || $userType == '11')
+        {
+          $sql1 = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, teller, transaction_type, transfer_recepient) VALUES ($accountNumINT, $tAmount , CURDATE(),CURTIME(), '$tellerUsername', 'transfer', $tAccount)"; 
+          $sql5 = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, teller, transaction_type, transfer_sender) VALUES ($tAccount, $amount_rate, CURDATE(),CURTIME(), '$tellerUsername', 'transfer', $accountNumINT)"; 
+        }
+        else 
+        {
+          $sql1 = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, transaction_type, transfer_recepient) VALUES ($accountNumINT, $amount_rate, CURDATE(),CURTIME(), 'transfer', $tAccount)"; 
+          $sql5 = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, transaction_type, transfer_sender) VALUES ($tAccount, $amount_rate, CURDATE(),CURTIME(), 'transfer', $accountNumINT)"; 
+
+        }
+        
+        if(mysqli_query($conn, $sql1))
+        {
+          echo "transaction added";
+          //require_once ('sms.php');
+        } 
+        else
+        {
+          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        } 
+
+        if(mysqli_query($conn, $sql5))
+        {
+          echo "transaction added";
+          //require_once ('sms.php');
+        } 
+        else
+        {
+          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        } 
+
+        $sql2 = "UPDATE bankAccount SET balance = balance - '".$tAmount."' WHERE accountNum = '".$accountNumINT."'"; 
+
+        if(mysqli_query($conn, $sql2))
+        {
+          echo "balance decreased";
+        } 
+        else
+        {
+          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        } 
+
+        $sql3 = "UPDATE bankAccount SET balance = balance + '".$amount_rate."' WHERE accountNum = '".$tAccount."'"; 
+
+        if(mysqli_query($conn, $sql3))
+        {
+          echo "balance increased";
+        } 
+        else
+        {
+          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        } 
+
+      }
     }
-    exit();
-  }
+      exit();
+    }
   else if (isset($_POST['deposit'])) 
   {
     header ("location:Transactions.php");
@@ -98,11 +135,11 @@ echo $userType;
     $accountNumINT = (int) $accountNum;
 
     if ($userType == '01'|| $userType == '11')
-      $sql = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, teller, transaction_type) VALUES ($accountNumINT, $dAmount, CURDATE(),CURTIME(), '$tellerUsername', 'deposit')"; 
+      $sql1 = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, teller, transaction_type) VALUES ($accountNumINT, $dAmount, CURDATE(),CURTIME(), '$tellerUsername', 'deposit')"; 
     else 
-       $sql = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, transaction_type) VALUES ($accountNumINT, $dAmount, CURDATE(),CURTIME(), 'deposit')"; 
+       $sql1 = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, transaction_type) VALUES ($accountNumINT, $dAmount, CURDATE(),CURTIME(), 'deposit')"; 
 
-    if(mysqli_query($conn, $sql))
+    if(mysqli_query($conn, $sql1))
     {
       echo "transaction added";
       //require_once ('sms.php');
@@ -135,11 +172,11 @@ echo $userType;
     if ($account['balance'] >= $wAmount)
     {
       if ($userType == '01'|| $userType == '11')
-        $sql = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, teller, transaction_type) VALUES ($accountNumINT, $wAmount, CURDATE(),CURTIME(), '$tellerUsername', 'withdraw')"; 
+        $sql1 = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, teller, transaction_type) VALUES ($accountNumINT, $wAmount, CURDATE(),CURTIME(), '$tellerUsername', 'withdraw')"; 
       else 
-        $sql = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, transaction_type) VALUES ($accountNumINT, $wAmount, CURDATE(),CURTIME(), 'withdraw')"; 
+        $sql1 = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, transaction_type) VALUES ($accountNumINT, $wAmount, CURDATE(),CURTIME(), 'withdraw')"; 
 
-      if(mysqli_query($conn, $sql))
+      if(mysqli_query($conn, $sql1))
       {
         echo "transaction added";
         //require_once ('sms.php');

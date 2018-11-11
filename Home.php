@@ -56,14 +56,14 @@ echo ini_get('display_errors');
     			<img class="d-block w-100 h-100" src ="background0.jpg" height="450">
     			<div class ="carousel-caption">
     				<button type="button" class= "btn btn-outline-light btn-lg"> <a href="SignIn.php" style="color:white">SIGN IN </button></a>
-    				<button type="button" class= "btn btn-primary btn-lg"><a href="SignUp.php" style="color:white">SIGN UP </button></a>
+    				<button type="button" class= "btn btn-primary btn-lg"><a href="signUp_client.php" style="color:white">SIGN UP </button></a>
     			</div>
     		</div>
     		<div class = "carousel-item">
     			<img class="d-block w-100 h-100" src ="background1.jpg">
     			 <div class ="carousel-caption">
     				<button type="button" class= "btn btn-outline-light btn-lg"><a href="SignIn.php" style="color:white"> SIGN IN </button> </a>
-    				<button type="button" class= "btn btn-primary btn-lg"><a href="SignUp.php" style="color:white"> SIGN UP </button></a>
+    				<button type="button" class= "btn btn-primary btn-lg"><a href="signUp_client.php" style="color:white"> SIGN UP </button></a>
     			</div>
     		</div>
     	</div>

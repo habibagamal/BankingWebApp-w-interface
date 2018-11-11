@@ -60,6 +60,9 @@ echo ini_get('display_errors');
         }
         else if ($client['userType'] == '10')
         {
+          if ($client['password_status'] == '1')
+            header ("location:ChangePassword.php");
+          else
           header ("location:Administrator.php");
           $_SESSION['username'] = $client['username'];
           $_SESSION['userType'] = $client['userType'];
@@ -96,8 +99,6 @@ echo ini_get('display_errors');
         echo $new; 
         
         $hashed = password_hash ($new, PASSWORD_DEFAULT, ['COST => 10']);
-        echo " hashed password is ";
-        echo $hashed;
         $query  = "UPDATE OnlineAccount SET user_password = '".$hashed."', password_status = '1' WHERE username = '".$username."'";
 
         if(mysqli_query($conn, $query))
