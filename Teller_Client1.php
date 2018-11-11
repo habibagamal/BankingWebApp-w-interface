@@ -1,11 +1,17 @@
 <?php
   require ('db.php');
-
+session_start();
 echo ini_get('display_errors');
 
 if (!ini_get('display_errors')) {
     ini_set('display_errors', '1');
 }
+
+  $clientID = $_SESSION['clientID'];
+  echo $clientID;
+
+  $username = $_SESSION['username'];
+  echo $username; 
 
 if ($conn)
   echo "connected"; 

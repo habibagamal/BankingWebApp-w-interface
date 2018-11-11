@@ -5,6 +5,11 @@
 
   $clientID = $_SESSION['clientID'];
   echo $clientID;
+
+  $username = $_SESSION['username'];
+  echo $username; 
+
+
   echo ini_get('display_errors');
   $_SESSION['userType'] = '00';
 ?>

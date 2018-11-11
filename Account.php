@@ -85,7 +85,7 @@ echo $userType;
         if(mysqli_query($conn, $sql1))
         {
           echo "transaction added";
-          //require_once ('sms.php');
+          require_once ('sms.php');
         } 
         else
         {
@@ -95,7 +95,6 @@ echo $userType;
         if(mysqli_query($conn, $sql5))
         {
           echo "transaction added";
-          //require_once ('sms.php');
         } 
         else
         {
@@ -142,7 +141,7 @@ echo $userType;
     if(mysqli_query($conn, $sql1))
     {
       echo "transaction added";
-      //require_once ('sms.php');
+      require_once ('sms.php');
     } 
     else
     {
@@ -179,7 +178,7 @@ echo $userType;
       if(mysqli_query($conn, $sql1))
       {
         echo "transaction added";
-        //require_once ('sms.php');
+        require_once ('sms.php');
       } 
       else
       {

@@ -45,11 +45,12 @@
     if ($account['balance'] >= $tAmount)
     {
     
-        $sql = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, transaction_type, transfer_recepient) VALUES ($accountNumINT, $tAmount, CURDATE(),CURTIME(), 'transfer', $tAccount)"; 
-      if(mysqli_query($conn, $sql))
+      $sql1 = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, transaction_type, transfer_recepient) VALUES ($accountNumINT, $tAmount, CURDATE(),CURTIME(), 'transfer', $tAccount)"; 
+      
+      if(mysqli_query($conn, $sql1))
       {
         echo "transaction added";
-        //require_once ('sms.php');
+        require_once ('sms.php');
       } 
       else
       {

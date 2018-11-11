@@ -3,9 +3,10 @@
 
   session_start();
 
+  echo ini_get('display_errors');
+
   $clientID = $_SESSION['clientID'];
   echo $clientID;
-  echo ini_get('display_errors');
 
   $username = $_SESSION['username'];
   echo $username; 
