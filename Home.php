@@ -1,20 +1,30 @@
 <?php
   require ('db.php');
 session_start();
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
 
-if (!ini_get('display_errors')) {
+if (!ini_get('display_errors')) 
+{
     ini_set('display_errors', '1');
 }
 
-$_SESSION['userType'] = '00';
-$userType = $_SESSION['userType'];
-echo $userType;
+$username = $_SESSION['username'];
+//echo $username; 
+$sql = "SELECT * FROM onlineAccount WHERE username= '".$username."'";
+$result = mysqli_query($conn, $sql);
+$client = mysqli_fetch_assoc($result);
+
+//echo $client['userType'];
 
 if ($conn)
-  echo "connected"; 
+{
+  //echo "connected"; 
+}
+else
+{
 
-echo ini_get('display_errors');
+}
+//echo ini_get('display_errors');
 ?>
 
 <!doctype html>
@@ -55,15 +65,15 @@ echo ini_get('display_errors');
     		<div class = "carousel-item active">
     			<img class="d-block w-100 h-100" src ="background0.jpg" height="450">
     			<div class ="carousel-caption">
-    				<button type="button" class= "btn btn-outline-light btn-lg"> <a href="SignIn.php" style="color:white">SIGN IN </button></a>
+    				<button type="button" class= "btn btn-outline-light btn-lg"> <a href="signIn.php"style="color:white">SIGN IN </button></a>
     				<button type="button" class= "btn btn-primary btn-lg"><a href="signUp_client.php" style="color:white">SIGN UP </button></a>
     			</div>
     		</div>
     		<div class = "carousel-item">
     			<img class="d-block w-100 h-100" src ="background1.jpg">
     			 <div class ="carousel-caption">
-    				<button type="button" class= "btn btn-outline-light btn-lg"><a href="SignIn.php" style="color:white"> SIGN IN </button> </a>
-    				<button type="button" class= "btn btn-primary btn-lg"><a href="signUp_client.php" style="color:white"> SIGN UP </button></a>
+    				<button type="button" class= "btn btn-outline-light btn-lg"><a style="color:white"> SIGN IN </button> </a>
+    				<button type="button" class= "btn btn-primary btn-lg"><a href="signIn.php" href="signUp_client.php" style="color:white"> SIGN UP </button></a>
     			</div>
     		</div>
     	</div>
@@ -88,3 +98,4 @@ echo ini_get('display_errors');
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   </body>
 </html>
+

@@ -1,17 +1,18 @@
 <?php
 require ('db.php');
 
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
 
 if (!ini_get('display_errors')) 
 {
     ini_set('display_errors', '1');
 }
-
+  $message = "";
+  $color = "green"; 
 if ($conn)
-  echo "connected"; 
+  //echo "connected"; 
 
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
 
   if (isset($_POST['submit1'])) 
   {
@@ -26,7 +27,7 @@ echo ini_get('display_errors');
       $email = mysqli_real_escape_string($conn, $_POST['email']);
       $password1 = mysqli_real_escape_string($conn, $_POST['password1']);
 
-      echo $currUser;
+      //echo $currUser;
 
       $check = password_verify($password1, $account['user_password']);
       
@@ -36,12 +37,22 @@ echo ini_get('display_errors');
 
         if(mysqli_query($conn, $sql))
         {
-          echo "email changed";
+          $message = "Email Changed";
+          //echo "email changed";
         } 
         else
         {
-          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+
+        $color = "red";
+        $message = "Error connecting to database";
+          //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
         }
+      }
+      else 
+      {
+
+        $color = "red";
+        $message = "Incorrect Password";
       }
  
     }
@@ -59,7 +70,7 @@ echo ini_get('display_errors');
       $phone = mysqli_real_escape_string($conn, $_POST['phone']);
       $password2 = mysqli_real_escape_string($conn, $_POST['password2']);
 
-      echo $currUser2;
+      //echo $currUser2;
 
       $check = password_verify($password2, $account2['user_password']);
       
@@ -69,12 +80,21 @@ echo ini_get('display_errors');
 
         if(mysqli_query($conn, $sql))
         {
-          echo "phone changed";
+          $message = "Phone Changed";
+          //echo "phone changed";
         } 
         else
         {
-          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+                  $color = "red";
+        $message = "Error connecting to database";
+          //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
         }
+      }
+      else
+      {
+
+        $color = "red";
+        $message = "Incorrect Password";
       }
   }
 ?>
@@ -137,7 +157,9 @@ echo ini_get('display_errors');
       <br>
       <br>
       <br>
-
+        <div >
+          <p align="center" style="color: <?php echo $color?>;"> <?php echo $message ?></p>
+        </div>
       <div class="btn-group dropdown d-flex justify-content-center align-items-center">
         <button type="button" class="btn btn-secondary">Update Email</button>
         <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

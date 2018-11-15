@@ -1,7 +1,7 @@
 <?php
   require ('db.php');
 
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
 
   if (!ini_get('display_errors')) 
   {
@@ -9,9 +9,11 @@
   }
 
   if ($conn)
-    echo "connected";
+  {
+    //echo "connected";
+  }
 
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
   
   $sql = "SELECT * FROM acc_transaction";
 

@@ -11,7 +11,9 @@ if (!ini_get('display_errors')) {
 // echo $userType;
 
 if ($conn)
-  echo "connected"; 
+{
+  //echo "connected"; 
+}
 
 //echo ini_get('display_errors');
 
@@ -26,7 +28,7 @@ if ($conn)
       $clientID = mysqli_real_escape_string($conn, $_POST['clientID']);
       $accountNUM = mysqli_real_escape_string($conn, $_POST['accountNUM']);
       $type = mysqli_real_escape_string($conn, $_POST['type']);
-      $password_status = 0;
+      $password_status = 1;
       $account_status  = 0;
 
       $query = "SELECT username, userType, user_password FROM OnlineAccount WHERE username = '".$username."'";
@@ -48,21 +50,21 @@ if ($conn)
       if ($type == '01')
       {
         $sql = "INSERT INTO OnlineAccount (username, user_password, account_status, password_status, Fname, Lname, userType) VALUES ('$username', '$hashed', '$account_status', '$password_status', '$Fname', '$Lname', '$type')";
-        echo "3";
+        //echo "3";
       }
       else if ($type == '10')
       {
         $sql = "INSERT INTO OnlineAccount (username, user_password, account_status, password_status, Fname, Lname, userType) VALUES ('$username', '$hashed', '$account_status', '$password_status', '$Fname', '$Lname', '$type')";
-        echo "4";
+        //echo "4";
       }
       
       if(mysqli_query($conn, $sql))
       {
-        echo "Records inserted successfully.";
+        //echo "Records inserted successfully.";
       } 
       else
       {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
       }
   }
 ?>

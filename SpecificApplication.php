@@ -6,14 +6,14 @@
   if(isset($_GET['id']) && $_GET['id'] !== '')
   {
     $clientUsername = $_GET['id'];
-    echo $clientUsername;
+    //echo $clientUsername;
   } 
   else 
   {
-    echo "failed";
+    //echo "failed";
   }
   
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
 
   if (!ini_get('display_errors')) 
   {
@@ -21,9 +21,11 @@
   }
 
   if ($conn)
-    echo "connected"; 
+  {
+    //echo "connected"; 
+  }
 
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
 
   $sql = "SELECT * FROM OnlineAccount WHERE username = '".$clientUsername."'";
 
@@ -32,8 +34,8 @@
   $application = mysqli_fetch_array($result);
   $clientID= $application['clientID'];
   $userType = $application['userType'];
-  echo " userType = ";
-  echo $userType; 
+  //echo " userType = ";
+  //echo $userType; 
 
   $query = "SELECT * FROM client WHERE clientID = '".$clientID."'";
   $result1 = mysqli_query($conn, $query);
@@ -50,7 +52,7 @@
   {
       header ("location:Administrator.php");
       $status = mysqli_real_escape_string($conn, $_POST['status']);
-      echo $status;
+      //echo $status;
       
       if ($status == "2")
       {
@@ -61,11 +63,11 @@
         else $sql1 = "DELETE FROM OnlineAccount WHERE username = '".$clientUsername."'";
         if(mysqli_query($conn, $sql1))
         {
-          echo "Application declined";
+          //echo "Application declined";
         } 
         else
         {
-          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+          //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
         }
       }
       else if ($status == "1")
@@ -73,11 +75,11 @@
         $sql2 = "UPDATE OnlineAccount SET account_status = '0' WHERE username = '".$clientUsername."'";
         if(mysqli_query($conn, $sql2))
         {
-          echo "Application approved";
+          //echo "Application approved";
         } 
         else
         {
-          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+          //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
         }
 
       }
@@ -89,16 +91,16 @@
   }
   else 
   {
-      echo "post not working";
+      //echo "post not working";
   }
 
   if(mysqli_query($conn, $sql))
   {
-    echo "Fetched";
+    //echo "Fetched";
   } 
   else
   {
-    echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
   }
 
 ?>

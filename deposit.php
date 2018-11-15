@@ -12,6 +12,6 @@ $client->messages->create(
   '+201126438060',
   array(
     'from' => '+1 717 210 4916',
-    'body' => 'Transfer took place in your account. Check the mobile banking application for details.',
+    'body' => 'Deposit took place in your account. Check the mobile banking application for details.',
   )
 );

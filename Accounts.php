@@ -3,13 +3,13 @@
 
   session_start();
 
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
 
   $clientID = $_SESSION['clientID'];
-  echo $clientID;
+  //echo $clientID;
 
   $username = $_SESSION['username'];
-  echo $username; 
+  //echo $username; 
 
   if (!ini_get('display_errors')) 
   {
@@ -17,9 +17,11 @@
   }
 
   if ($conn)
-    echo "connected";
+  {
+    //echo "connected";
+  }
 
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
 
   $sql = "SELECT * FROM bankAccount WHERE accClientID = '".$clientID."'";
   $result = mysqli_query($conn, $sql);
@@ -28,7 +30,7 @@
   // $resultType = mysqli_query($conn, $sqlType);
   // $userType = mysqli_fetch_assoc($resultType);
   $userType = $_SESSION['userType'];
-  echo $userType; 
+  //echo $userType; 
 
   ?>
 <!doctype html>

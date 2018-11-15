@@ -5,7 +5,7 @@
 
   $_SESSION['userType'] = '01';
   
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
 
   if (!ini_get('display_errors')) 
   {
@@ -13,15 +13,25 @@
   }
 
   if ($conn)
-    echo "connected";
+  {
+    //echo "connected";
+  }
 
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
 
   if (isset($_POST['enter'])) 
   {
       header ("location:Accounts.php");
       $clientID = mysqli_real_escape_string($conn, $_POST['clientID']);
       $_SESSION['clientID'] = $clientID;
+      exit();
+  }
+
+  if (isset($_POST['enter1'])) 
+  {
+      header ("location:Account.php");
+      $accountNum = mysqli_real_escape_string($conn, $_POST['accountNum']);
+      $_SESSION['accountNum'] = $accountNum;
       exit();
   }
 ?>
@@ -97,6 +107,22 @@
           <form method = "POST" action = "#">
             <input name="clientID" type="Client's ID Number" class="form-control" id="exampleDropdownIDNUM2" placeholder="Client's ID Number">
             <button name = "enter" type="enter" class="btn btn-dark" >Enter</button>
+        </form>
+      </div>
+    </div>
+      <br>
+      <br>
+      <br>
+
+      <div class="btn-group dropdown d-flex justify-content-center align-items-center">
+        <button type="button" class="btn btn-secondary">View Account with Account Num</button>
+        <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu ">
+          <form method = "POST" action = "#">
+            <input name="accountNum" type="Client's ID Number" class="form-control" id="exampleDropdownIDNUM2" placeholder="Account Number">
+            <button name = "enter1" type="enter" class="btn btn-dark" >Enter</button>
         </form>
       </div>
     </div>

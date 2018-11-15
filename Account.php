@@ -3,24 +3,25 @@
 
   session_start();
 
-  if(isset($_GET['id']) && $_GET['id'] !== '')
+  if(isset($_GET['id']) && $_GET['id'] != '')
   {
     $accountNum = $_GET['id'];
     $_SESSION['accountNum'] = $accountNum;
-    echo $accountNum;
+    //echo $accountNum;
   } 
-  else 
+  else if ($_GET['id'] == '')
   {
-    echo "failed";
+    $accountNum = $_SESSION['accountNum'];
+    //echo $accountNum;
   }
 
   $tellerUsername = $_SESSION['username'];
-  echo $tellerUsername;
+  //echo $tellerUsername;
 
   $userType = $_SESSION['userType'];
-  echo $userType;
+  //echo $userType;
 
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
 
   if (!ini_get('display_errors')) 
   {
@@ -28,24 +29,34 @@
   }
 
   if ($conn)
-    echo "connected";
+  {
+    //echo "connected";
+  }
 
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
+
+  $message = "";
+  $color = "green"; 
 
   $sql = "SELECT * FROM bankAccount WHERE accountNum = '".$accountNum."'";
   $result = mysqli_query($conn, $sql);
   $account = mysqli_fetch_assoc($result);
 
+  if ($account == '')
+  {
+        $color = "red";
+        $message = "Account Number does not exist";
+  }
+  $message = "";
+  $color = "green"; 
   // $sqlNum = "SELECT phone FROM client WHERE clientID = ".$account['accClientID']."'";
   // $resultNum = mysqli_query($conn, $sqlNum);
   // $phone = mysqli_fetch_assoc($resultNum);
 
-echo $tellerUsername;
-echo $userType;
+//echo $tellerUsername;
+//echo $userType;
   if (isset($_POST['transfer'])) 
   {
-
-    header ("location:Transactions.php");
     $tAmount = mysqli_real_escape_string($conn, $_POST['tAmount']);
     $tAccount = mysqli_real_escape_string($conn, $_POST['tAccount']);
 
@@ -68,7 +79,7 @@ echo $userType;
          
       if ($account['balance'] >= $tAmount)
       {
-
+        //header ("location:Transactions.php");
 
         if ($userType == '01' || $userType == '11')
         {
@@ -84,49 +95,46 @@ echo $userType;
         
         if(mysqli_query($conn, $sql1))
         {
-          echo "transaction added";
-          require_once ('sms.php');
-        } 
-        else
-        {
-          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
-        } 
+          $affected = (int)mysqli_affected_rows($conn);
+          if($affected > 0)
+          { 
+            header ("location:Transactions.php"); 
+            require_once ('sms.php');
 
-        if(mysqli_query($conn, $sql5))
-        {
-          echo "transaction added";
-        } 
-        else
-        {
-          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
-        } 
+            if(mysqli_query($conn, $sql5))
+            {
+              //echo "transaction added";
+            } 
 
-        $sql2 = "UPDATE bankAccount SET balance = balance - '".$tAmount."' WHERE accountNum = '".$accountNumINT."'"; 
+            $sql2 = "UPDATE bankAccount SET balance = balance - '".$tAmount."' WHERE accountNum = '".$accountNumINT."'"; 
+            if(mysqli_query($conn, $sql2))
+            {
+              //echo "balance decreased";
+            } 
 
-        if(mysqli_query($conn, $sql2))
-        {
-          echo "balance decreased";
-        } 
-        else
-        {
-          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
-        } 
+            $sql3 = "UPDATE bankAccount SET balance = balance + '".$amount_rate."' WHERE accountNum = '".$tAccount."'"; 
+            if(mysqli_query($conn, $sql3))
+            {
+              //echo "balance increased";
+            } 
 
-        $sql3 = "UPDATE bankAccount SET balance = balance + '".$amount_rate."' WHERE accountNum = '".$tAccount."'"; 
-
-        if(mysqli_query($conn, $sql3))
-        {
-          echo "balance increased";
-        } 
-        else
-        {
-          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
-        } 
-
+            exit();
+          }
+          else 
+          {        
+            $color = "red";
+            $message = "Wrong Account Number";
+          }
+          //echo "transaction added";
       }
     }
-      exit();
+      else 
+      {
+        $color = "red";
+        $message = "Insufficient Fund";
+      }
     }
+  }
   else if (isset($_POST['deposit'])) 
   {
     header ("location:Transactions.php");
@@ -140,36 +148,36 @@ echo $userType;
 
     if(mysqli_query($conn, $sql1))
     {
-      echo "transaction added";
-      require_once ('sms.php');
+      //echo "transaction added";
+     require_once ('deposit.php');
     } 
     else
     {
-      echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+      //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
     } 
 
     $sql3 = "UPDATE bankAccount SET balance = balance + '".$dAmount."' WHERE accountNum = '".$accountNum."'"; 
 
       if(mysqli_query($conn, $sql3))
       {
-        echo "balance increased";
+        //echo "balance increased";
       } 
       else
       {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
       } 
       exit();
 
   }
   else if (isset($_POST['withdraw'])) 
   {
-    header ("location:Transactions.php");
     $wAmount = mysqli_real_escape_string($conn, $_POST['wAmount']);
 
     $accountNumINT = (int) $accountNum;
 
     if ($account['balance'] >= $wAmount)
     {
+      header ("location:Transactions.php");
       if ($userType == '01'|| $userType == '11')
         $sql1 = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, teller, transaction_type) VALUES ($accountNumINT, $wAmount, CURDATE(),CURTIME(), '$tellerUsername', 'withdraw')"; 
       else 
@@ -177,25 +185,32 @@ echo $userType;
 
       if(mysqli_query($conn, $sql1))
       {
-        echo "transaction added";
-        require_once ('sms.php');
+        //echo "hereeeeee";
+        //echo "transaction added";
+
+        require_once ('withdraw.php');
       } 
       else
       {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
       } 
 
       $sql2 = "UPDATE bankAccount SET balance = balance - '".$wAmount."' WHERE accountNum = '".$accountNumINT."'"; 
 
       if(mysqli_query($conn, $sql2))
       {
-        echo "balance decreased";
+        //echo "balance decreased";
       } 
       else
       {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
       } 
       exit();
+    }
+    else
+    {
+        $color = "red";
+        $message = "Insufficient Fund";
     }
 
     mysqli_close($conn);
@@ -256,7 +271,9 @@ echo $userType;
      <br>
       <br>
       <br>
-
+      <div>
+          <h6 align="center" style="color: <?php echo $color?>;"> <?php echo $message ?></h6>
+        </div>
       <div class="btn-group dropdown d-flex justify-content-center align-items-center">
         <button type="button" class="btn btn-secondary">Create Withdrawal</button>
         <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -1,16 +1,20 @@
 <?php
 require ('db.php');
 
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
 
 if (!ini_get('display_errors')) {
     ini_set('display_errors', '1');
 }
 
 if ($conn)
-  echo "connected"; 
+{
+  //echo "connected"; 
+}
 
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
+                        $color = "green";
+                     $message = "";
 
   if (isset($_POST['submit'])) 
   {
@@ -22,58 +26,64 @@ echo ini_get('display_errors');
       $password1 = mysqli_real_escape_string($conn, $_POST['password1']);
       $password2 = mysqli_real_escape_string($conn, $_POST['password2']);
 
-      echo $currUser;
+      //echo $currUser;
 
       if ($password1 == $password2)
       {
 
         $hashed = password_hash ($password1, PASSWORD_DEFAULT, ['COST => 10']);
-        echo $hashed;
+        //echo $hashed;
 
         if ($currUser == $username)
         {
           if ($userType == '00')
           {
             header("location:client.php");
-            echo "password changed";
+            //echo "password changed";
           }
           if ($userType == '01')
           {
             header("location:teller.php");
-            echo "password changed";
+            //echo "password changed";
           }
           if ($userType == '10')
           {
             header("location:administrator.php");
-            echo "password changed";
+            //echo "password changed";
           }
           if ($userType == '11')
           {
             header("location:Teller_Client1.php");
-            echo "password changed";
+            //echo "password changed";
           }
           $sql = "UPDATE OnlineAccount SET user_password ='".$hashed."', password_status = '0' WHERE username = '".$username."'";
           if(mysqli_query($conn, $sql))
           {
-            echo "password changed";
+            //echo "password changed";
           } 
           else
           {
-            echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+            //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
           }
         }
         else
         if ($userType == '10')
         {
-            header("location:Administrator.php");
+            
             $sql = "UPDATE OnlineAccount SET user_password ='".$hashed."', password_status = '1' WHERE username = '".$username."' AND userType != '00'";
             if(mysqli_query($conn, $sql))
             {
-              echo "password changed";
+              $affected = (int)mysqli_affected_rows($conn);
+              if($affected > 0){ 
+                header("location:Administrator.php");
+              exit(); }
+              else {$message = "Unallowed"; $color = "red";}
+              
+              //echo "password changed";
             } 
             else
             {
-              echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+              //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
             }
         }
         
@@ -127,7 +137,7 @@ echo ini_get('display_errors');
     <div class="collapse" id="navbarToggleExternalContent">
         <div class="bg-dark p-4">
         <button type="button" class="btn btn-success" ><a href="home.php" style="color:white">HOME</button></a>
-        <button type="button" class="btn btn-warning" ><a href="home.php" style="color:white">LOGOUT</button></a>
+        <button name = "logout" type="button" class="btn btn-warning" ><a href="home.php" style="color:white">LOGOUT</button></a>
         </div>
     </div>
   </div>
@@ -139,6 +149,9 @@ echo ini_get('display_errors');
   <div class="container d-flex justify-content-center align-items-center">
     <div class ="card align-items-center text-center" style="width:20rem;background-color:rgb(0, 0, 0);opacity:0.7;">
       <form method ="POST" action = "#">
+        <div >
+          <p style="color: <?php echo $color?>;"> <?php echo $message ?></p>
+        </div>
         <div class="form-group" style="color:white">
           <label for="exampleInputEmail1">Username</label>
           <input name="username" type="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username ">

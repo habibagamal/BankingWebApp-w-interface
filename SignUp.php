@@ -1,17 +1,17 @@
 <?php
   require ('db.php');
 session_start();
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
 
 if (!ini_get('display_errors')) {
     ini_set('display_errors', '1');
 }
 
 $userType = $_SESSION['userType'];
-echo $userType;
+//echo $userType;
 
 if ($conn)
-  echo "connected"; 
+  //echo "connected"; 
 
 //echo ini_get('display_errors');
 
@@ -65,33 +65,33 @@ if ($conn)
         $accountNUMINT = (int) $accountNUM;
         $clientIDINT  = (int) $clientID;
         $sql = "INSERT INTO OnlineAccount (username, user_password, account_status, password_status, clientID, nationalID, Fname, Lname, AccountNum, userType) VALUES ('$username', '$hashed', '1', '$password_status', $clientIDINT, '$nationalID', '$Fname', '$Lname', $accountNUMINT, '$type')";
-        echo "2";
+        //echo "2";
       }
       else if ($type == '01')
       {
         $sql = "INSERT INTO OnlineAccount (username, user_password, account_status, password_status, Fname, Lname, userType) VALUES ('$username', '$hashed', '$account_status', '$password_status', '$Fname', '$Lname', '$type')";
-        echo "3";
+        //echo "3";
       }
       else if ($type == '10')
       {
         $sql = "INSERT INTO OnlineAccount (username, user_password, account_status, password_status, Fname, Lname, userType) VALUES ('$username', '$hashed', '$account_status', '$password_status', '$Fname', '$Lname', '$type')";
-        echo "4";
+        //echo "4";
       }
       else if ($type == '11')
       {
         $accountNUMINT = (int) $accountNUM;
         $clientIDINT  = (int) $clientID;
         $sql = "INSERT INTO OnlineAccount (username, user_password, account_status, password_status, clientID, nationalID, Fname, Lname, AccountNum, userType) VALUES ('$username', '$hashed', '1', '$password_status', $clientIDINT, '$nationalID', '$Fname', '$Lname', $accountNUMINT, '$type')";
-        echo "5";
+        //echo "5";
       }
       
       if(mysqli_query($conn, $sql))
       {
-        echo "Records inserted successfully.";
+        //echo "Records inserted successfully.";
       } 
       else
       {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
       }
  
   }

@@ -1,20 +1,22 @@
 <?php
   require ('db.php');
-
-echo ini_get('display_errors');
+session_start();
+//echo ini_get('display_errors');
 
 if (!ini_get('display_errors')) {
     ini_set('display_errors', '1');
 }
 
 if ($conn)
-  echo "connected"; 
+  //echo "connected"; 
 
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
+  
+  $message = "";
+  $color = "green"; 
 
   if (isset($_POST['submit'])) 
   {
-      session_start();
       $username = mysqli_real_escape_string($conn, $_POST['username']);
       $password = mysqli_real_escape_string($conn, $_POST['password']);
 
@@ -22,11 +24,13 @@ echo ini_get('display_errors');
 
       if(mysqli_query($conn, $sql))
       {
-        echo "Fetched";
+        //echo "Fetched";
       } 
       else
       {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        $color = "red";
+        $message = "Can't Connect to database";
+        //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
       }
 
       $result = mysqli_query($conn, $sql);
@@ -47,6 +51,11 @@ echo ini_get('display_errors');
           $_SESSION['userType'] = $client['userType'];
           $_SESSION['clientID'] = $client['clientID'];
           exit();
+        }
+        else if ($client['account_status'] == '1')
+        {
+          $color = "red";
+          $message = "Not approved yet";
         }
         else if ($client['userType'] == '01')
         {
@@ -85,7 +94,14 @@ echo ini_get('display_errors');
           exit();
         }
       }
+      else
+      {
+          $color = "red";
+          $message = "Wrong credentials";
+      }
     }
+    
+
     if (isset($_POST['forget']))
     {
 
@@ -95,19 +111,22 @@ echo ini_get('display_errors');
       {
         $string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@!#$%^&*";
         $new = substr(str_shuffle($string),0,8);
-        echo " New Password is: ";
+        // echo " New Password is: ";
         echo $new; 
+        $_SESSION['new'] = $new; 
+        require_once ('forgetPassword.php');
+
         
         $hashed = password_hash ($new, PASSWORD_DEFAULT, ['COST => 10']);
         $query  = "UPDATE OnlineAccount SET user_password = '".$hashed."', password_status = '1' WHERE username = '".$username."'";
 
         if(mysqli_query($conn, $query))
         {
-          echo "Password changed";
+          //echo "Password changed";
         } 
         else
         {
-          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+          //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
         }
       }
     }
@@ -169,6 +188,9 @@ echo ini_get('display_errors');
   <div class="container d-flex justify-content-center align-items-center">
     <div class ="card align-items-center text-center" style="width:20rem; background-color:rgb(0, 0, 0);opacity:0.7;">
       <form method = "POST" action = "#">
+        <div >
+          <p style="color: <?php echo $color?>;"> <?php echo $message ?></p>
+        </div>
         <div class="form-group" style="color:white">
           <label for="exampleInputFistName1">Username </b></label> 
           <input name = "username" type="name" class="form-control" id="First Name" placeholder="First Name">

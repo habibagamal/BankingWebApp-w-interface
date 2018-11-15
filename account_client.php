@@ -7,14 +7,14 @@
   {
     $accountNum = $_GET['id'];
     $_SESSION['accountNum'] = $accountNum;
-    echo $accountNum;
+    //echo $accountNum;
   } 
   else 
   {
-    echo "failed";
+    //echo "failed";
   }
 
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
 
   if (!ini_get('display_errors')) 
   {
@@ -22,18 +22,23 @@
   }
 
   if ($conn)
-    echo "connected";
+  {
+    //echo "connected";
+  }
 
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
 
   $sql = "SELECT * FROM bankAccount WHERE accountNum = '".$accountNum."'";
   $result = mysqli_query($conn, $sql);
   $account = mysqli_fetch_assoc($result);
 
+  $message = "";
+  $color = "green"; 
+
   if (isset($_POST['transfer'])) 
   {
 
-    header ("location:Transactions.php");
+    
     $tAmount = mysqli_real_escape_string($conn, $_POST['tAmount']);
     $tAccount = mysqli_real_escape_string($conn, $_POST['tAccount']);
     $accountNumINT = (int) $accountNum;
@@ -56,54 +61,62 @@
       if ($account['balance'] >= $tAmount)
       {
       
+
+          header ("location:Transactions.php");
           $sql = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, transaction_type, transfer_recepient) VALUES ($accountNumINT, $tAmount, CURDATE(),CURTIME(), 'transfer', $tAccount)"; 
 
           $sql2 = "INSERT INTO acc_transaction (accountNum, amount, transaction_date, transaction_time, transaction_type, transfer_sender) VALUES ($tAccount, $amount_rate, CURDATE(),CURTIME(), 'transfer', $accountNumINT)"; 
 
         if(mysqli_query($conn, $sql))
         {
-          echo "transaction added";
-          //require_once ('sms.php');
+          //echo "transaction added";
+          require_once ('sms.php');
         } 
         else
         {
-          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+          //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
         } 
         if(mysqli_query($conn, $sql2))
         {
-          echo "transaction added";
+          //echo "transaction added";
           //require_once ('sms.php');
         } 
         else
         {
-          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+          //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
         } 
 
         $sql2 = "UPDATE bankAccount SET balance = balance - '".$tAmount."' WHERE accountNum = '".$accountNumINT."'"; 
 
         if(mysqli_query($conn, $sql2))
         {
-          echo "balance decreased";
+          //echo "balance decreased";
         } 
         else
         {
-          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+          //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
         } 
 
         $sql3 = "UPDATE bankAccount SET balance = balance + '".$amount_rate."' WHERE accountNum = '".$tAccount."'"; 
 
         if(mysqli_query($conn, $sql3))
         {
-          echo "balance increased";
+          //echo "balance increased";
         } 
         else
         {
-          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+          //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
         } 
+        exit();
+      }
+      else 
+      {
+        $color = "red";
+        $message = "Insufficient Fund";
       }
 
     }
-    exit();
+
 
     mysqli_close($conn);
   }
@@ -164,7 +177,9 @@
       <br>
       <br>
 
-
+      <div >
+        <p align="center" style="color: <?php echo $color?>;"> <?php echo $message ?></p>
+      </div>
       <div class="btn-group dropdown d-flex justify-content-center align-items-center">
         <button type="button" class="btn btn-secondary">Create Transfer</button>
         <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -2,17 +2,19 @@
   require ('db.php');
 
   session_start();
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
 
   if (!ini_get('display_errors')) 
   {
-    ini_set('display_errors', '1');
+    //ini_set('display_errors', '1');
   }
 
   if ($conn)
-    echo "connected"; 
+  {
+    //echo "connected"; 
+  }
 
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
 
   $sql = "SELECT * FROM OnlineAccount WHERE account_status = '1'";
 
@@ -20,11 +22,11 @@
 
   if(mysqli_query($conn, $sql))
   {
-    echo "Fetched";
+    //echo "Fetched";
   } 
   else
   {
-    echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+    //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
   }
 
 ?> 

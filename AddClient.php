@@ -1,16 +1,16 @@
 <?php
   require ('db.php');
 
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
 
 if (!ini_get('display_errors')) {
     ini_set('display_errors', '1');
 }
 
 if ($conn)
-  echo "connected"; 
+  //echo "connected"; 
 
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
 
   if (isset($_POST['submit'])) 
   {
@@ -39,20 +39,20 @@ echo ini_get('display_errors');
       
       if(mysqli_query($conn, $sql1))
       {
-        echo "Records inserted into client successfully.";
+        //echo "Records inserted into client successfully.";
       } 
       else
       {
-        echo "ERROR: Could not able to execute " . mysqli_error($conn);
+        //echo "ERROR: Could not able to execute " . mysqli_error($conn);
       }
 
       if(mysqli_query($conn, $sql2))
       {
-        echo "Records inserted into bank account successfully.";
+        //echo "Records inserted into bank account successfully.";
       } 
       else
       {
-        echo "ERROR: Could not able to execute" . mysqli_error($conn);
+        //echo "ERROR: Could not able to execute" . mysqli_error($conn);
       }
  
   }

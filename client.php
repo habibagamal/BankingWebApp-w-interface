@@ -4,13 +4,13 @@
   session_start();
 
   $clientID = $_SESSION['clientID'];
-  echo $clientID;
+  //echo $clientID;
 
   $username = $_SESSION['username'];
-  echo $username; 
+  //echo $username; 
 
 
-  echo ini_get('display_errors');
+  //echo ini_get('display_errors');
   $_SESSION['userType'] = '00';
 ?>
 <!doctype html>

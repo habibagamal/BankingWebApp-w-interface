@@ -1,17 +1,19 @@
 <?php
   require ('db.php');
 session_start();
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
 
 if (!ini_get('display_errors')) {
     ini_set('display_errors', '1');
 }
 
 $userType = $_SESSION['userType'];
-echo $userType;
+//echo $userType;
 
 if ($conn)
-  echo "connected"; 
+{
+  //echo "connected"; 
+}
 
 //echo ini_get('display_errors');
 
@@ -32,8 +34,6 @@ if ($conn)
       $query = "SELECT username, userType, user_password FROM OnlineAccount WHERE username = '".$username."'";
       $result_query = mysqli_query($conn, $query);
       $user = mysqli_fetch_assoc($result_query);
-
-      header("location: Home.php");
 
       $hashed = password_hash ($password, PASSWORD_DEFAULT, ['COST => 10']);
 
@@ -58,16 +58,19 @@ if ($conn)
         $accountNUMINT = (int) $accountNUM;
         $clientIDINT  = (int) $clientID;
         $sql = "INSERT INTO OnlineAccount (username, user_password, account_status, password_status, clientID, nationalID, Fname, Lname, AccountNum, userType) VALUES ('$username', '$hashed', '1', '$password_status', $clientIDINT, '$nationalID', '$Fname', '$Lname', $accountNUMINT, '$type')";
-        echo "2";
+        //echo "2";
       }
       
       if(mysqli_query($conn, $sql))
       {
-        echo "Records inserted successfully.";
+        header("location: Home.php");
+        exit();
+        //echo "Records inserted successfully.";
       } 
       else
       {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        //echo "no";
+        //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
       }
  
   }

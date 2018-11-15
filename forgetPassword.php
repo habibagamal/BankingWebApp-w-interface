@@ -1,5 +1,7 @@
 <?php
 
+//session_start();
+$new = $_SESSION['new'];
 // Get the PHP helper library from twilio.com/docs/php/install
 require_once ('Twilio/autoload.php'); // Loads the library
 use Twilio\Rest\Client;
@@ -12,6 +14,6 @@ $client->messages->create(
   '+201126438060',
   array(
     'from' => '+1 717 210 4916',
-    'body' => 'Transfer took place in your account. Check the mobile banking application for details.',
+    'body' => 'New password is "'.$new.'". Use it to login.                              ',
   )
 );

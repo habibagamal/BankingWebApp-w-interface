@@ -1,34 +1,40 @@
 <?php
   require ('db.php');
+session_start();
+$AdminUsername = $_SESSION['username'];
+//echo $AdminUsername;
 
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
 
 if (!ini_get('display_errors')) {
     ini_set('display_errors', '1');
 }
 
 if ($conn)
-  echo "connected"; 
+  //echo "connected"; 
 
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
+
+  $message = "";
+  $color = "green"; 
 
   if (isset($_POST['submit'])) 
   {
-      session_start();
       $username = mysqli_real_escape_string($conn, $_POST['username']);
       $password = mysqli_real_escape_string($conn, $_POST['password']);
+      //echo $username;
 
-      echo $username;
-
-      $sql = "SELECT * FROM OnlineAccount WHERE username = '".$username."'";
+      $sql = "SELECT * FROM OnlineAccount WHERE username = '".$AdminUsername."'";
 
       if(mysqli_query($conn, $sql))
       {
-        echo "Fetched";
+        //echo "Fetched";
       } 
       else
-      {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+      { 
+        $color = "red";
+        $message = "Can't Connect to database";
+        //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
       }
 
       $result = mysqli_query($conn, $sql);
@@ -51,13 +57,19 @@ echo ini_get('display_errors');
 
         $sql1 = "DELETE FROM OnlineAccount WHERE username = '".$username."' AND userType != '00' ";
 
+
+
         if(mysqli_query($conn, $sql1))
         {
-          echo "Account Deleted";
+          $affected = (int)mysqli_affected_rows($conn);
+          if($affected > 0){ $message = "Account Deleted"; }
+          else {$message = "Account Not Found!"; $color = "red";}
+        
         } 
         else
         {
-          echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+          $message = "COULD NOT EXECUTE SQL";
+          //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
         }
 
         // $sql3 = ;//"SET FOREIGN_KEY_CHECKS=1;"
@@ -70,6 +82,11 @@ echo ini_get('display_errors');
         // {
         //   echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
         // }
+      }else {
+
+        $color = "red";
+        $message = "Incorrect Password";
+
       }
  
   }
@@ -132,6 +149,9 @@ echo ini_get('display_errors');
   <div class="container d-flex justify-content-center align-items-center">
     <div class ="card align-items-center text-center" style="width:20rem;background-color:rgb(0, 0, 0);opacity:0.7;">
       <form method = "POST" action = "#">
+        <div >
+          <p style="color: <?php echo $color?>;"> <?php echo $message ?></p>
+        </div>
         <div class="form-group" style="color:white">
           <label for="exampleInputEmail1">Enter Username</label>
           <input name = "username" type="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username">

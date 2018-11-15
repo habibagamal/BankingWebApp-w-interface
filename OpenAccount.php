@@ -1,16 +1,18 @@
 <?php
   require ('db.php');
 
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
 
 if (!ini_get('display_errors')) {
     ini_set('display_errors', '1');
 }
 
 if ($conn)
-  echo "connected"; 
+{
+  //echo "connected"; 
+}
 
-echo ini_get('display_errors');
+//echo ini_get('display_errors');
 
   if (isset($_POST['submit'])) 
   {
@@ -23,11 +25,11 @@ echo ini_get('display_errors');
       $sql = "INSERT INTO bankAccount (accClientID, currency_code, accountType) VALUES ($clientID, $currency, '$type')";
       if(mysqli_query($conn, $sql))
       {
-        echo "account added";
+        //echo "account added";
       } 
       else
       {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
+        //echo "ERROR: Could not able to execute $sql. " . mysqli_error($conn);
       }
   }
 ?>

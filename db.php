@@ -5,7 +5,9 @@
 // Check connection
 	if (mysqli_connect_errno()) 
 	{
-    	echo "failed to connect";
+    	//echo "failed to connect";
 	} 
 	else 
-		echo "Connected successfully";
+	{
+		//echo "Connected successfully";	
+	}
